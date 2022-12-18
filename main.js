@@ -1,4 +1,4 @@
-require("http").createServer((_, res) => res.end("Berjalan coy")).listen(8080)
+require("http").createServer((_, res) => res.send("Berjalan coy")).listen(8080)
 
 const {
   BufferJSON,
