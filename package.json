@@ -35,7 +35,8 @@
     "pino": "^7.0.5",
     "qrcode-terminal": "^0.12.0",
     "util": "^0.12.4",
-    "execa": "*"
+    "execa": "*",
+    "human-readable": "*"
   },
   "directories": {
     "lib": "lib",
