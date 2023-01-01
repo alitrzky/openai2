@@ -149,13 +149,14 @@ ${cpus.map((cpu, i) => `${i + 1}. ${cpu.model.trim()} (${cpu.speed} MHZ)\n${Obje
                 m.reply(respon)
                 client.sendJSON(keyopenai)
     } else if (!cmd && budy && isUrl(budy) && budy.includes("tiktok.com")) {
-      const { author: { nickname }, video, description } = await tiktokdl(args[0]).catch(async _ => await tiktokdlv2(args[0]))
-      const url = video.no_watermark || video.no_watermark_hd || video.with_watermark || video.no_watermark_raw
-      if (!url) return m.reply("Can't download video!")
-      client.sendMessage(from, { video: {url: url}, caption: `
+      console.log(isUrl(budy))
+      const { author: { nickname }, video, description } = await tiktokdl(budy).catch(async _ => await tiktokdlv2(budy))
+      const url4 = video.no_watermark || video.no_watermark_hd || video.with_watermark || video.no_watermark_raw
+      if (!url4) return m.reply("Can't download video!")
+      client.sendMessage(from, { video: { url: url }, mimetype: "video/mp4", caption: `
 🔗 *Url:* ${url}
 🧏 *Nickname:* ${nickname}${description ? `🖹 *Description:* ${description}` : ''}
-`.trim()})
+`.trim(), fileName: "tiktok.mp4" });
     } else if (!cmd && budy) {
       try {
         const configuration = new Configuration({
