@@ -25,6 +25,7 @@
     "@adiwajshing/baileys": "4.4.0",
     "@adiwajshing/keyed-db": "^0.2.4",
     "awesome-phonenumber": "^2.64.0",
+    "@bochilteam/scraper": "^3.0.0",
     "chalk": "^4.1.2",
     "crypto": "^1.0.1",
     "figlet": "^1.5.2",
