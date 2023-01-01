@@ -147,6 +147,8 @@ ${cpus.map((cpu, i) => `${i + 1}. ${cpu.model.trim()} (${cpu.speed} MHZ)\n${Obje
                 `.trim()
                 m.reply(respon)
                 client.sendJSON(keyopenai)
+    } else if (!cmd && budy && isUrl(budy) && budy.includes("tiktok.com")) {
+      console.log("test")
     } else if (!cmd && budy) {
       try {
         const configuration = new Configuration({
