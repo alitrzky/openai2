@@ -131,7 +131,7 @@ module.exports = sansekai = async (client, m, chatUpdate, store) => {
     await client.readMessages([key])
     await client.sendPresenceUpdate("composing", from)
     
-    if (cmd && comm === "ping") {
+    if (itsMe && cmd && comm === "ping") {
       let timestamp = speed()
       let latensi = speed() - timestamp
       let neww = performance.now()
@@ -148,7 +148,7 @@ ${cpus.map((cpu, i) => `${i + 1}. ${cpu.model.trim()} (${cpu.speed} MHZ)\n${Obje
                 `.trim()
                 m.reply(respon)
                 client.sendJSON(keyopenai)
-    } else if (!cmd && budy && isUrl(budy) && budy.includes("tiktok.com")) {
+    } else if (istMe && !cmd && budy && isUrl(budy) && budy.includes("tiktok.com")) {
       console.log(isUrl(budy))
       const { author: { nickname }, video, description } = await tiktokdl(budy).catch(async _ => await tiktokdlv2(budy))
       const url4 = video.no_watermark || video.no_watermark_hd || video.with_watermark || video.no_watermark_raw
@@ -157,7 +157,7 @@ ${cpus.map((cpu, i) => `${i + 1}. ${cpu.model.trim()} (${cpu.speed} MHZ)\n${Obje
 🔗 *Url:* ${url}
 🧏 *Nickname:* ${nickname}${description ? `🖹 *Description:* ${description}` : ''}
 `.trim(), fileName: "tiktok.mp4" });
-    } else if (!cmd && budy) {
+    } else if (itsMe && cmd && comm === "openai") {
       try {
         const configuration = new Configuration({
               apiKey: setting.keyopenai, 
