@@ -68,6 +68,10 @@ const cpu = cpus.reduce((last, cpu, _, { length }) => {
   }
 })
 
+const isUrl = (url) => { 
+  return url.match(new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)/, 'gi')) 
+}
+
 const formatp = sizeFormatter({
     std: 'JEDEC', //'SI' = default | 'IEC' | 'JEDEC'
     decimalPlaces: 2,
