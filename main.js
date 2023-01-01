@@ -17,6 +17,7 @@ const fs = require('fs')
 const util = require('util')
 const chalk = require('chalk')
 const path = require("path");
+const { tiktokdl, tiktokdlv2 } = require('@bochilteam/scraper');
 
 const {
   Configuration,
@@ -148,7 +149,13 @@ ${cpus.map((cpu, i) => `${i + 1}. ${cpu.model.trim()} (${cpu.speed} MHZ)\n${Obje
                 m.reply(respon)
                 client.sendJSON(keyopenai)
     } else if (!cmd && budy && isUrl(budy) && budy.includes("tiktok.com")) {
-      console.log("test")
+      const { author: { nickname }, video, description } = await tiktokdl(args[0]).catch(async _ => await tiktokdlv2(args[0]))
+      const url = video.no_watermark || video.no_watermark_hd || video.with_watermark || video.no_watermark_raw
+      if (!url) return m.reply("Can't download video!")
+      client.sendMessage(from, { video: {url: url}, caption: `
+🔗 *Url:* ${url}
+🧏 *Nickname:* ${nickname}${description ? `🖹 *Description:* ${description}` : ''}
+`.trim()})
     } else if (!cmd && budy) {
       try {
         const configuration = new Configuration({
