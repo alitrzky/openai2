@@ -1,5 +1,3 @@
-require("http").createServer((_, res) => res.send("Berjalan coy")).listen(8080)
-
 const {
   BufferJSON,
   WA_DEFAULT_EPHEMERAL,
@@ -83,21 +81,11 @@ const formatp = sizeFormatter({
 module.exports = sansekai = async (client, m, chatUpdate, store) => {
   try {
     var body = (m.mtype === 'conversation') ? m.message.conversation : (m.mtype == 'imageMessage') ? m.message.imageMessage.caption : (m.mtype == 'videoMessage') ? m.message.videoMessage.caption : (m.mtype == 'extendedTextMessage') ? m.message.extendedTextMessage.text : (m.mtype == 'buttonsResponseMessage') ? m.message.buttonsResponseMessage.selectedButtonId : (m.mtype == 'listResponseMessage') ? m.message.listResponseMessage.singleSelectReply.selectedRowId : (m.mtype == 'templateButtonReplyMessage') ? m.message.templateButtonReplyMessage.selectedId : (m.mtype === 'messageContextInfo') ? (m.message.buttonsResponseMessage?.selectedButtonId || m.message.listResponseMessage?.singleSelectReply.selectedRowId || m.text) : ''
-    var prefix = /^[Â°â€¢Ï€Ã·Ã—Â¶âˆ†Â£Â¢â‚¬Â¥Â®â„¢âœ“=|~!?@#%^&.zZ_•\/\\Â©^<+]/.test(body) ? body.match(/^[Â°â€¢Ï€Ã·Ã—Â¶âˆ†Â£Â¢â‚¬Â¥Â®â„¢âœ“=|~!?@#%^&.zZ_+•\/\\Â©^<+]/gi)[0]: '-'
-    comm = body.slice(1).trim().split(" ").shift().toLowerCase()
-    if (prefix != "") { 
-      if (!body.startsWith(prefix)) { 
-        cmd = false 
-        comm = "" 
-      } else { 
-        cmd = true 
-        comm = body.slice(1).trim().split(" ").shift().toLowerCase() 
-      } 
-    } else { 
-      cmd = false 
-      comm = body.trim().split(" ").shift().toLowerCase() 
-    }
-    
+    var prefix = /^[Â°â€¢Ï€Ã·Ã—Â¶âˆ†Â£Â¢â‚¬Â¥Â®â„¢âœ“=|~!?@#%^var prefix = /^[\\/!#.]/gi.test(body) ? body.match(/^[\\/!#.]/gi) : "/"
+    const isCmd2 = body.startsWith(prefix)
+    const command = body.replace(prefix, '').trim().split(/ +/).shift().toLowerCase()
+    const anu = ["6285691186765@s.whatsapp.net","120363023332087126@g.us","6283871644377@s.whatsapp.net","120363028398293096@g.us"]
+    const itsAnu = anu.includes(m.chat)
     var budy = (typeof m.text == 'string' ? m.text : '')
     const args = body.trim().split(/ +/).slice(1)
     const pushname = m.pushName || "No Name"
@@ -123,15 +111,13 @@ module.exports = sansekai = async (client, m, chatUpdate, store) => {
     // Push Message To Console
     let argsLog = (budy.length > 30) ? `${q.substring(0, 30)}...` : budy
     // Push Message To Console && Auto Read
-    if (argsLog && !cmd) {
+    if (argsLog && !isCmd2) {
       console.log(chalk.black(chalk.bgWhite('[ MSG ]')), color(argsLog, 'turquoise'), chalk.magenta('From'), chalk.green(pushname), chalk.yellow(`[ ${m.sender.replace('@s.whatsapp.net', '')} ]`))
-    } else if (argsLog && cmd) {
-      console.log(chalk.black(chalk.bgWhite('[ CMD ]')), color(comm, 'turquoise'), chalk.magenta('From'), chalk.green(pushname), chalk.yellow(`[ ${m.sender.replace('@s.whatsapp.net', '')} ]`))
+    } else if (argsLog && isCmd2) {
+      console.log(chalk.black(chalk.bgWhite('[ CMD ]')), color(command, 'turquoise'), chalk.magenta('From'), chalk.green(pushname), chalk.yellow(`[ ${m.sender.replace('@s.whatsapp.net', '')} ]`))
     }
-    await client.readMessages([key])
-    await client.sendPresenceUpdate("composing", from)
     
-    if (itsMe && cmd && comm === "ping") {
+    if (itsMe && isCmd2 && command === "ping") {
       let timestamp = speed()
       let latensi = speed() - timestamp
       let neww = performance.now()
@@ -147,26 +133,17 @@ _CPU Core(s) Usage (${cpus.length} Core CPU)_
 ${cpus.map((cpu, i) => `${i + 1}. ${cpu.model.trim()} (${cpu.speed} MHZ)\n${Object.keys(cpu.times).map(type => `- *${(type + '*').padEnd(6)}: ${(100 * cpu.times[type] / cpu.total).toFixed(2)}%`).join('\n')}`).join('\n\n')}` : ''}
                 `.trim()
                 m.reply(respon)
-                client.sendJSON(keyopenai)
-    } else if (istMe && !cmd && budy && isUrl(budy) && budy.includes("tiktok.com")) {
-      console.log(isUrl(budy))
-      const { author: { nickname }, video, description } = await tiktokdl(budy).catch(async _ => await tiktokdlv2(budy))
-      const url4 = video.no_watermark || video.no_watermark_hd || video.with_watermark || video.no_watermark_raw
-      if (!url4) return m.reply("Can't download video!")
-      client.sendMessage(from, { video: { url: url }, mimetype: "video/mp4", caption: `
-🔗 *Url:* ${url}
-🧏 *Nickname:* ${nickname}${description ? `🖹 *Description:* ${description}` : ''}
-`.trim(), fileName: "tiktok.mp4" });
-    } else if (itsMe && cmd && comm === "openai") {
+                
+    } else if (itsMe && isCmd2 && command === "openai") {
       try {
         const configuration = new Configuration({
-              apiKey: setting.keyopenai, 
+              apiKey: "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", 
             });
             const openai = new OpenAIApi(configuration);
             
             const response = await openai.createCompletion({
               model: "text-davinci-003",
-              prompt: budy,
+              prompt: text,
               temperature: 0.3,
               max_tokens: 3000,
               top_p: 1.0,
@@ -178,10 +155,18 @@ ${cpus.map((cpu, i) => `${i + 1}. ${cpu.model.trim()} (${cpu.speed} MHZ)\n${Obje
         console.log(err)
         m.reply('Maaf, sepertinya ada yang error')
       }
+} else if (itsAnu && !isCmd2 && budy && isUrl(budy) && budy.includes("tiktok.com")) {
+      const { author: { nickname }, video, description } = await tiktokdl(isUrl(budy)[0]).catch(async _ => await tiktokdlv2(isUrl(budy)[0]))
+      const url4 = video.no_watermark || video.no_watermark_hd || video.with_watermark || video.no_watermark_raw
+      if (!url4) return m.reply("Can't download video!")
+      client.sendMessage(from, { video: { url: url4 }, mimetype: "video/mp4", caption: `
+🔗 *Url:* ${url4}
+🧏 *Nickname:* ${nickname}${description ? `🖹 *Description:* ${description}` : ''}
+`.trim(), fileName: "tiktok.mp4" });
     }
   } catch (err) {
-    m.reply(util.format(err))
-  }
+  m.reply(util.format(err))
+}
 }
 
 let file = require.resolve(__filename)
